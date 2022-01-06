@@ -1,4 +1,16 @@
-#define PxMATRIX_COLOR_DEPTH 4
+//--------------------------------------PxMatrix-Glediator--------------------------------------
+//
+//Controll LED-Matrices using the glediator-protocol
+//You can use software like Jinx! (http://www.live-leds.de/downloads/) to controll your matrix
+//Follow instructions on https://github.com/2dom/PxMatrix to wire up your display
+//
+//-----------------------------------------by Loewe_111-----------------------------------------
+
+#define PxMATRIX_COLOR_DEPTH 4  //The color-depth to output (RECOMMENDED: 4)
+
+#define MATRIX_HEIGHT 32        //The height of your display in pixels
+#define MATRIX_WIDTH 64         //The width of your display in pixels
+#define BAUDRATE 500000         //The baudrate data is send (RECOMMENDED: 500000)
 
 #include <PxMatrix.h>
 
@@ -30,9 +42,9 @@ Ticker display_ticker;
 
 #endif
 
-PxMATRIX display(64,32,P_LAT, P_OE,P_A,P_B,P_C,P_D);
+PxMATRIX display(MATRIX_WIDTH,MATRIX_HEIGHT,P_LAT, P_OE,P_A,P_B,P_C,P_D);
 
-uint16_t textColor = display.color565(255, 0, 0);
+uint16_t textColor = display.color565(50, 30, 0);
 int16_t BLACK = display.color565(0, 0, 0);
 
 #ifdef ESP8266
@@ -45,7 +57,6 @@ void display_updater()
 
 #ifdef ESP32
 void IRAM_ATTR display_updater(){
-  // Increment the counter and set the time of ISR
   portENTER_CRITICAL_ISR(&timerMux);
   display.display(20);
   portEXIT_CRITICAL_ISR(&timerMux);
@@ -54,7 +65,7 @@ void IRAM_ATTR display_updater(){
 
 
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(BAUDRATE);
   display.begin(16);
   display.flushDisplay();
   display.setTextWrap(true);
@@ -82,16 +93,16 @@ int serialGlediator () {
   return Serial.read();
 }
 
-byte leds[(64*32)*3+1];
+byte leds[(MATRIX_HEIGHT*MATRIX_WIDTH)*3+1];
 int prog;
 
 void loop() {
   while (serialGlediator () != 1) {}
-  Serial.readBytes((char*)leds, (64*32)*3);
+  Serial.readBytes((char*)leds, (MATRIX_HEIGHT*MATRIX_WIDTH)*3);
   prog = 0;
-  for(int y = 0;y<32; y++)
+  for(int y = 0;y<MATRIX_HEIGHT; y++)
   {
-    for(int x = 0;x<64;x++)
+    for(int x = 0;x<MATRIX_WIDTH;x++)
     {
       display.drawPixel(x,y,display.color565(int(leds[prog]), leds[1+prog], leds[2+prog]));
       prog+=3;
