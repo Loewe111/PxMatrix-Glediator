@@ -1,6 +1,5 @@
 # PxMatrix-Glediator
 
-`Consider using [PxMatrix-tpm2net](https://github.com/Loewe111/PxMatrix-tpm2net), as it is faster and more reliable`
 
 Controll LED-Matrices using the glediator protocoll and the PxMatrix library
 
@@ -10,3 +9,7 @@ Follow instructions on https://github.com/2dom/PxMatrix to wire up your display
 
 uses PxMatrix by Dominic Buchstaller
 https://github.com/2dom/PxMatrix
+
+# Alternative:
+
+Consider using [PxMatrix-tpm2net](https://github.com/Loewe111/PxMatrix-tpm2net), which uses WiFi and TPM2.NET, which is faster and more reliable
